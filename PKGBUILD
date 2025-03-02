@@ -292,11 +292,11 @@ _bindings_nodejs_build() {
   _bindings_nodejs_deps_setup
   yarn \
     install
-  npm \
-    pack
-  mv \
-    "${_pkg}-${pkgver}.tgz" \
-    "${srcdir}"	
+  # npm \
+  #   pack
+  # mv \
+  #   "${_pkg}-${pkgver}.tgz" \
+  #   "${srcdir}"	
 }
 
 build() {
@@ -316,7 +316,8 @@ build() {
 package() {
   local \
     _npmdir \
-    _npm_opts=() 
+    _npm_opts=() \
+    _src
   _npm_opts=(
     # --user
     #   root
@@ -330,10 +331,14 @@ package() {
     "${_npmdir}"
   cd \
     "${_npmdir}"
+  if [[ "${_source}" == "github" ]]; then
+    _src="${srcdir}/${_tarname}/bindings/node.js"
+  elif [[ "${_source}" == "npm" ]]; then
+    _src="${srcdir}/${_pkg}-${pkgver}.tgz"
+  fi
   npm \
     install \
       "${_npm_opts[@]}" \
-      "${srcdir}/${_pkg}-${pkgver}.tgz"
-      # "${srcdir}/${_pkg}.js-${pkgver}"
+      "${_src}"
 }
 
