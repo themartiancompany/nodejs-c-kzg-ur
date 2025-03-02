@@ -212,7 +212,7 @@ _blst_build() {
     -fPIC
     -Wall
     -Wextra
-    # -Werror
+    -Werror
     -D__BLST_PORTABLE__
     -c
   )
@@ -228,8 +228,10 @@ _blst_build() {
   "${_cc}" \
     "${_cc_opts[@]}" \
     "build/assembly.S"
+  echo \
+    "Done."
   cd \
-    ".."
+    "${srcdir}/${_tarname}"
 }
 
 _c_kzg_build() {
@@ -249,12 +251,12 @@ _c_kzg_build() {
   echo \
     "Building c-kzg."
   cd \
-    "src"
+    "${srcdir}/${_tarname}/src"
   CFLAGS="${_cflags[*]}" \
   VERBOSE=1 \
   make
   cd \
-    ".."
+    "${srcdir}/${_tarname}"
 }
 
 _bindings_nodejs_deps_setup() {
@@ -262,27 +264,27 @@ _bindings_nodejs_deps_setup() {
     -p \
     "deps/blst/src"
   cp \
-    "../../blst/"{"assembly.o","libblst.a","server.o"} \
+    "${srcdir}/${_tarname}/blst/"{"assembly.o","libblst.a","server.o"} \
     "deps/blst/src"
   cd \
-    "deps/blst"
+    "${srcdir}/${_tarname}/bindings/node.js/deps/blst"
   ln \
     -s \
-    "../../../go/blst_headers" \
+    "${srcdir}/${_tarname}/bindings/go/blst_headers" \
     "bindings"
   cd \
-    ".."
+    "${srcdir}/${_tarname}/bindings/node.js/deps"
   ln \
     -s \
-    "../../../src" \
+    "${srcdir}/${_tarname}/src" \
     "c-kzg"
   cd \
-    ".."
+    "${srcdir}/${_tarname}/bindings/node.js"
 }
 
 _bindings_nodejs_build() {
   cd \
-    "bindings/node.js"
+    "${srcdir}/${_tarname}/bindings/node.js"
   _bindings_nodejs_deps_setup
   yarn \
     install
@@ -297,8 +299,12 @@ build() {
   cd \
     "${_tarname}"
   if [[ "${_source}" == "github" ]]; then
-    _blst_build
+    # build c-kzg kirsh because
+    # 'blst/build.sh' script called
+    # by c-kzg makefile cleans the
+    # directory afterwords
     _c_kzg_build
+    _blst_build
     _bindings_nodejs_build
   fi
 }
