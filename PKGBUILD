@@ -214,12 +214,12 @@ _blst_build() {
     -Werror
     -D__BLST_PORTABLE__
     -c
+    -Wno-constant-conversion
   )
   echo \
     "Building blst."
   cd \
     "${srcdir}/${_tarname}/blst"
-  ls
   "${_cc}" \
     "${_cc_opts[@]}" \
     "./src/server.c"
