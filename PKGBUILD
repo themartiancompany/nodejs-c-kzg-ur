@@ -38,7 +38,9 @@ _pkg="c-kzg"
 _Pkg="c-kzg-4844"
 pkgname="${_node}-${_pkg}"
 _commit="f79c1b3ec89e78b574dae9e87f6f4c25c3f81363"
-pkgver=2.1.3
+pkgver="2.1.3"
+_blst_pkgver="v0.3.11"
+_blst_commit="3dd0f804b1819e5d03fb22ca2e6fac105932043a"
 pkgrel=1
 _pkgdesc=(
   "A minimal implementation of the Polynomial"
@@ -57,6 +59,7 @@ arch=(
 )
 _http="https://github.com"
 # _ns="ethereum"
+_blst_ns="supranational"
 _ns="themartiancompany"
 url="${_http}/${_ns}/${_Pkg}"
 license=(
@@ -81,6 +84,8 @@ conflicts=(
   "${_pkg}"
 )
 noextract=()
+source=()
+sha256sums=()
 if [[ "${_source}" == "npm" ]]; then
   _tag_name="pkgver"
   _tag="${pkgver}"
@@ -92,20 +97,28 @@ elif [[ "${_source}" == "github" ]]; then
   _tag="${_commit}"
 fi
 _tarname="${_Pkg}-${_tag}"
-_url="${_http}/${_ns}/${_Pkg}"
+_blst_url="${_http}/${_blst_ns}/blst"
 if [[ "${_source}" == "npm" ]]; then
   _tarball="${_tarname}.tgz"
   _src="${_tarball}.tgz::${_npm}/@${_ns}/${_pkg}/-/${_tarname}.tgz"
   _sum="22d6d7007fc40fa22d565d73e008a953fa0db2ff1c5a8b2e1a2c0ea203fb6174"
 elif [[ "${_source}" == "github" ]]; then
   _tarball="${_tarname}.zip"
-  _src="${_tarball}::${_url}/archive/${_commit}.zip"
+  _src="${_tarball}::${url}/archive/${_commit}.zip"
   _sum="c2ba96eda1b212434f5d0ff643cddde4cf71f6c768b2b1c1f20c91ba1cf85b25"
+  _blst_src="blst-${_blst_commit}.zip::${_blst_url}/archive/${_blst_commit}.zip"
+  _blst_sum="810b9f46a48d53d504e3788276571a1e0f3118247b4b741d504a6abc2eea4591"
+  source+=(
+    "${_blst_src}"
+  )
+  sha256sums+=(
+    "${_blst_sum}"
+  )
 fi
-source=(
+source+=(
   "${_src}"
 )
-sha256sums=(
+sha256sums+=(
   "${_sum}"
 )
 
@@ -170,6 +183,10 @@ prepare() {
   _android_gyp_quirk
   # _android_quirk  
   if [[ "${_source}" == "github" ]]; then
+    cp \
+      -r \
+      "blst-${_blst_commit}/*" \
+      "${_tarname}/blst"
     cd \
       "${_tarname}"
     sed \
@@ -198,11 +215,14 @@ _blst_build() {
     -D__BLST_PORTABLE__
     -c
   )
+  echo \
+    "Building blst."
   cd \
-    "blst"
+    "${srcdir}/${_tarname}/blst"
+  ls
   "${_cc}" \
     "${_cc_opts[@]}" \
-    "src/server.c"
+    "./src/server.c"
   "${_cc}" \
     "${_cc_opts[@]}" \
     "build/assembly.S"
@@ -250,7 +270,6 @@ _bindings_nodejs_build() {
       build
   npm \
     pack
-
 }
 
 build() {
@@ -274,7 +293,8 @@ package() {
     --prefix
       "${pkgdir}/usr"
   )
-  cd "${srcdir}/bindings/node.js"
+  cd \
+    "${srcdir}/bindings/node.js"
   _npmdir="${pkgdir}/usr/lib/node_modules/"
   mkdir \
     -p \
