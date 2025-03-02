@@ -250,6 +250,7 @@ _c_kzg_build() {
   cd \
     "src"
   CFLAGS="${_cflags[*]}" \
+  VERBOSE=1 \
   make
   cd \
     ".."
