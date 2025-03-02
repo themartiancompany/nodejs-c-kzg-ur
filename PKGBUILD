@@ -237,8 +237,13 @@ _blst_build() {
 _c_kzg_build() {
   local \
     _cflags=()
-  _cflags=(
-    $CFLAGS
+  # c-zkg seems it doesn't
+  # like _FORTIFY_SOURCE
+  _cflags+=( $( \
+    echo \
+      $CFLAGS | \
+      sed \
+        "s/-Wp,-D_FORTIFY_SOURCE=.//g")
   )
   if [[ "$CARCH" == "arm" || \
 	"$CARCH" == "armv7l" || \
