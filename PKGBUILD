@@ -275,7 +275,9 @@ _bindings_nodejs_deps_setup() {
   cd \
     "${srcdir}/${_tarname}/bindings/node.js/deps/blst"
   rm \
-    "bindings"
+    -r \
+    "bindings" || \
+    true
   ln \
     -s \
     "${srcdir}/${_tarname}/bindings/go/blst_headers" \
@@ -283,7 +285,9 @@ _bindings_nodejs_deps_setup() {
   cd \
     "${srcdir}/${_tarname}/bindings/node.js/deps"
   rm \
-    "${_pkg}"
+    -r \
+    "${_pkg}" || \
+    true
   ln \
     -s \
     "${srcdir}/${_tarname}/src" \
