@@ -77,20 +77,20 @@ noextract=()
 if [[ "${_source}" == "npm" ]]; then
   _tag="pkgver"
   _tag_name="${pkgver}"
-  _tarball="${_tarname}.tgz"
   noextract+=(
     "${_tarball}"
   )
 elif [[ "${_source}" == "github" ]]; then
   _tag="commit"
   _tag_name="${_commit}"
-  _tarball="${_tarname}.zip"
 fi
 _tarname="${_pkg}-${_tag}"
 if [[ "${_source}" == "npm" ]]; then
+  _tarball="${_tarname}.tgz"
   _src="${_tarball}.tgz::${_npm}/@${_ns}/${_pkg}/-/${_tarname}.tgz"
   _sum="22d6d7007fc40fa22d565d73e008a953fa0db2ff1c5a8b2e1a2c0ea203fb6174"
 elif [[ "${_source}" == "github" ]]; then
+  _tarball="${_tarname}.zip"
   _src="${_tarball}::${_url}/archive/${_commit}.zip"
   _sum="ciao"
 fi
@@ -167,13 +167,13 @@ build() {
   if [[ "${_source}" == "github" ]]; then
     cd \
       "${_tarname}/bindings/node.js"
-  yarn \
-    install
-  yarn \
-    run \
-      build
-  npm \
-    pack
+    yarn \
+      install
+    yarn \
+      run \
+        build
+    npm \
+      pack
   fi
 }
 
