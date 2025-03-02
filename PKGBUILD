@@ -290,11 +290,11 @@ _bindings_nodejs_build() {
   _bindings_nodejs_deps_setup
   yarn \
     install
-  # yarn \
-  #   run \
-  #     build
   npm \
     pack
+  mv \
+    "${_pkg}-${pkgver}.tgz" \
+    "${srcdir}"	
 }
 
 build() {
@@ -322,8 +322,6 @@ package() {
     --prefix
       "${pkgdir}/usr"
   )
-  cd \
-    "${srcdir}/${_tarname}/bindings/node.js"
   _npmdir="${pkgdir}/usr/lib/node_modules/"
   mkdir \
     -p \
