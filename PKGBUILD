@@ -35,6 +35,7 @@ fi
 _node="nodejs"
 _source="github"
 _pkg="c-kzg"
+_Pkg="c-kzg-4844"
 pkgname="${_node}-${_pkg}"
 _commit="f79c1b3ec89e78b574dae9e87f6f4c25c3f81363"
 pkgver=2.1.3
@@ -55,15 +56,15 @@ arch=(
   'i686'
 )
 _http="https://github.com"
-_ns="chainsafe"
-url="${_http}/${_ns}/${_pkg}.js"
+# _ns="ethereum"
+_ns="themartiancompany"
+url="${_http}/${_ns}/${_Pkg}"
 license=(
   "APACHE"
 )
 depends=(
   "${_node}"
-)
-makedepends=(
+) makedepends=(
   'npm'
   "${_cc}"
 )
@@ -75,16 +76,17 @@ conflicts=(
 )
 noextract=()
 if [[ "${_source}" == "npm" ]]; then
-  _tag="pkgver"
-  _tag_name="${pkgver}"
+  _tag_name="pkgver"
+  _tag="${pkgver}"
   noextract+=(
     "${_tarball}"
   )
 elif [[ "${_source}" == "github" ]]; then
-  _tag="commit"
-  _tag_name="${_commit}"
+  _tag_name="commit"
+  _tag="${_commit}"
 fi
 _tarname="${_pkg}-${_tag}"
+_url="${_http}/${_ns}/${_Pkg}"
 if [[ "${_source}" == "npm" ]]; then
   _tarball="${_tarname}.tgz"
   _src="${_tarball}.tgz::${_npm}/@${_ns}/${_pkg}/-/${_tarname}.tgz"
