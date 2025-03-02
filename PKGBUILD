@@ -212,7 +212,7 @@ _blst_build() {
     -fPIC
     -Wall
     -Wextra
-    -Werror
+    # -Werror
     -D__BLST_PORTABLE__
     -c
   )
