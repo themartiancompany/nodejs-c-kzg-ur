@@ -238,12 +238,13 @@ _c_kzg_build() {
   local \
     _cflags=()
   # c-zkg seems it doesn't
-  # like _FORTIFY_SOURCE
-  _cflags+=( $( \
-    echo \
-      $CFLAGS | \
-      sed \
-        "s/-Wp,-D_FORTIFY_SOURCE=.//g")
+  # like _FORTIFY_SOURCE nor
+  # almost default cflag
+  _cflags+=( 
+    # $(echo \
+    #     $CFLAGS | \
+    #     sed \
+    #       "s/-Wp,-D_FORTIFY_SOURCE=.//g")
   )
   if [[ "$CARCH" == "arm" || \
 	"$CARCH" == "armv7l" || \
