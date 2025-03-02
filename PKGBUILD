@@ -215,11 +215,6 @@ _blst_build() {
     -D__BLST_PORTABLE__
     -c
   )
-  if [[ "${_cc}" == "clang" ]]; then
-    _cc_opts+=(
-    -Wno-error="constant-conversion"
-    )
-  fi
   echo \
     "Building blst with" \
     "compiler '${_cc}' and" \
@@ -237,11 +232,24 @@ _blst_build() {
 }
 
 _c_kzg_build() {
+  local \
+    _cflags=()
+  _cflags=(
+    $CFLAGS
+  )
+  if [[ "${_cc}" == "clang" ]]; then
+    _cflags+=(
+      -Wno-constant-conversion
+    )
+  fi
+  echo \
+    "Building c-kzg."
   cd \
     "src"
+  CFLAGS="${_cflags[*]}" \
   make
   cd \
-    ..
+    ".."
 }
 
 _bindings_nodejs_deps_setup() {
