@@ -278,7 +278,7 @@ _bindings_nodejs_deps_setup() {
 
 _bindings_nodejs_build() {
   cd \
-    "${_tarname}/bindings/node.js"
+    "bindings/node.js"
   _bindings_nodejs_deps_setup
   yarn \
     install
