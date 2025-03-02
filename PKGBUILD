@@ -343,6 +343,12 @@ package() {
     "${_npmdir}"
   if [[ "${_source}" == "github" ]]; then
     _src="${srcdir}/${_tarname}/bindings/node.js"
+    npm \
+      config \
+        set \
+	  install-links="false" \
+	  --location \
+	    "${_src}"
   elif [[ "${_source}" == "npm" ]]; then
     _src="${srcdir}/${_pkg}-${pkgver}.tgz"
   fi
