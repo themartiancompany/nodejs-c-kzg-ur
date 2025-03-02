@@ -185,7 +185,7 @@ prepare() {
   if [[ "${_source}" == "github" ]]; then
     cp \
       -r \
-      "blst-${_blst_commit}/*" \
+      "${srcdir}/blst-${_blst_commit}/"* \
       "${_tarname}/blst"
     cd \
       "${_tarname}"
