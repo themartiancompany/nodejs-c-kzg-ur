@@ -295,7 +295,7 @@ build() {
   if [[ "${_source}" == "github" ]]; then
     _blst_build
     _c_kzg_build
-    _build_bindings_nodejs_build
+    _bindings_nodejs_build
   fi
 }
 
