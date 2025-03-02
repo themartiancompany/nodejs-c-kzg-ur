@@ -268,18 +268,20 @@ _bindings_nodejs_deps_setup() {
     "deps/blst/src"
   cd \
     "${srcdir}/${_tarname}/bindings/node.js/deps/blst"
+  rm \
+    "bindings"
   ln \
     -s \
     "${srcdir}/${_tarname}/bindings/go/blst_headers" \
-    "bindings" || \
-    true
+    "bindings"
   cd \
     "${srcdir}/${_tarname}/bindings/node.js/deps"
+  rm \
+    "${_pkg}"
   ln \
     -s \
     "${srcdir}/${_tarname}/src" \
-    "c-kzg" || \
-    true
+    "${_pkg}"
   cd \
     "${srcdir}/${_tarname}/bindings/node.js"
 }
