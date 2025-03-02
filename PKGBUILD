@@ -211,13 +211,19 @@ _blst_build() {
     -fPIC
     -Wall
     -Wextra
-    -Werror
+    # -Werror
     -D__BLST_PORTABLE__
     -c
-    -Wno-constant-conversion
   )
+  if [[ "${_cc}" == "clang" ]]; then
+    _cc_opts+=(
+    -Wno-error="constant-conversion"
+    )
+  fi
   echo \
-    "Building blst."
+    "Building blst with" \
+    "compiler '${_cc}' and" \
+    "options '${_cc_opts[*]}'."
   cd \
     "${srcdir}/${_tarname}/blst"
   "${_cc}" \
