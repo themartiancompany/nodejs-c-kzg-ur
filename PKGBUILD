@@ -237,7 +237,10 @@ _c_kzg_build() {
   _cflags=(
     $CFLAGS
   )
-  if [[ "${_cc}" == "clang" ]]; then
+  if [[ "$CARCH" == "arm" || \
+	"$CARCH" == "armv7l" || \
+	"$CARCH" == 'i686' || \
+	"$CARCH" == "pentium4" ]]; then
     _cflags+=(
       -Wno-constant-conversion
     )
