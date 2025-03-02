@@ -37,7 +37,7 @@ _source="github"
 _pkg="c-kzg"
 _Pkg="c-kzg-4844"
 pkgname="${_node}-${_pkg}"
-_commit="f79c1b3ec89e78b574dae9e87f6f4c25c3f81363"
+_commit="844a22c3892fe413e85096898f842be1100ce3bc"
 pkgver="2.1.3"
 _blst_pkgver="v0.3.11"
 _blst_commit="3dd0f804b1819e5d03fb22ca2e6fac105932043a"
@@ -105,7 +105,7 @@ if [[ "${_source}" == "npm" ]]; then
 elif [[ "${_source}" == "github" ]]; then
   _tarball="${_tarname}.zip"
   _src="${_tarball}::${url}/archive/${_commit}.zip"
-  _sum="c2ba96eda1b212434f5d0ff643cddde4cf71f6c768b2b1c1f20c91ba1cf85b25"
+  _sum="8dd01c27ac2e03eaa08dcd80f8be6554d000836d3065df9358231ff34b5c77ca"
   _blst_src="blst-${_blst_commit}.zip::${_blst_url}/archive/${_blst_commit}.zip"
   _blst_sum="810b9f46a48d53d504e3788276571a1e0f3118247b4b741d504a6abc2eea4591"
   source+=(
