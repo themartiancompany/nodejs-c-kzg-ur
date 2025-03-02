@@ -170,6 +170,8 @@ prepare() {
   _android_gyp_quirk
   # _android_quirk  
   if [[ "${_source}" == "github" ]]; then
+    cd \
+      "${_tarname}"
     sed \
       -e \
         '20,26d' \
