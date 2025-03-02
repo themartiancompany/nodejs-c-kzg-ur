@@ -271,13 +271,15 @@ _bindings_nodejs_deps_setup() {
   ln \
     -s \
     "${srcdir}/${_tarname}/bindings/go/blst_headers" \
-    "bindings"
+    "bindings" || \
+    true
   cd \
     "${srcdir}/${_tarname}/bindings/node.js/deps"
   ln \
     -s \
     "${srcdir}/${_tarname}/src" \
-    "c-kzg"
+    "c-kzg" || \
+    true
   cd \
     "${srcdir}/${_tarname}/bindings/node.js"
 }
@@ -288,9 +290,9 @@ _bindings_nodejs_build() {
   _bindings_nodejs_deps_setup
   yarn \
     install
-  yarn \
-    run \
-      build
+  # yarn \
+  #   run \
+  #     build
   npm \
     pack
 }
@@ -321,7 +323,7 @@ package() {
       "${pkgdir}/usr"
   )
   cd \
-    "${srcdir}/bindings/node.js"
+    "${srcdir}/${_tarname}/bindings/node.js"
   _npmdir="${pkgdir}/usr/lib/node_modules/"
   mkdir \
     -p \
