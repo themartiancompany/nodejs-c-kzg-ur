@@ -64,10 +64,16 @@ license=(
 )
 depends=(
   "${_node}"
-) makedepends=(
+)
+makedepends=(
   'npm'
   "${_cc}"
 )
+if [[ "${_source}" == "github" ]]; then
+  makedepends+=(
+    'yarn'
+  )
+fi
 provides=(
   "${_pkg}=${pkgver}"
 )
@@ -163,19 +169,95 @@ _android_gyp_quirk() {
 prepare() {
   _android_gyp_quirk
   # _android_quirk  
+  if [[ "${_source}" == "github" ]]; then
+    sed \
+      -e \
+        '20,26d' \
+      -i \
+      "bindings/node.js/binding.gyp"
+    sed \
+      -e \
+        '7d' \
+      -i \
+      "bindings/node.js/binding.gyp"
+  fi
+}
+
+_blst_build() {
+  local \
+    _cc_opts=()
+  _cc_opts+=(
+    -O2
+    -fno-builtin
+    -fPIC
+    -Wall
+    -Wextra
+    -Werror
+    -D__BLST_PORTABLE__
+    -c
+  )
+  cd \
+    "blst"
+  "${_cc}" \
+    "${_cc_opts[@]}" \
+    "src/server.c"
+  "${_cc}" \
+    "${_cc_opts[@]}" \
+    "build/assembly.S"
+  cd \
+    ".."
+}
+
+_c_kzg_build() {
+  cd \
+    "src"
+  make
+  cd \
+    ..
+}
+
+_bindings_nodejs_deps_setup() {
+  mkdir \
+    -p \
+    "deps/blst/src"
+  cp \
+    "../../blst/"{"assembly.o","libblst.a","server.o"} \
+    "deps/blst/src"
+  cd \
+    "deps/blst"
+  ln \
+    -s \
+    "../../../go/blst_headers" \
+    "bindings"
+  ln \
+    -s \
+    "../../../src" \
+    "c-kzg"
+  cd \
+    "../.."
+}
+
+_bindings_nodejs_build() {
+  cd \
+    "${_tarname}/bindings/node.js"
+  _bindings_nodejs_deps_setup
+  yarn \
+    install
+  yarn \
+    run \
+      build
+  npm \
+    pack
+
 }
 
 build() {
+  cd \
+    "${_tarname}"
   if [[ "${_source}" == "github" ]]; then
-    cd \
-      "${_tarname}/bindings/node.js"
-    yarn \
-      install
-    yarn \
-      run \
-        build
-    npm \
-      pack
+    _blst_build
+    _c_kzg_build
+    _build_bindings_nodejs_build
   fi
 }
 
