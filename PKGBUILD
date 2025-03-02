@@ -85,7 +85,7 @@ elif [[ "${_source}" == "github" ]]; then
   _tag_name="commit"
   _tag="${_commit}"
 fi
-_tarname="${_pkg}-${_tag}"
+_tarname="${_Pkg}-${_tag}"
 _url="${_http}/${_ns}/${_Pkg}"
 if [[ "${_source}" == "npm" ]]; then
   _tarball="${_tarname}.tgz"
@@ -190,7 +190,7 @@ package() {
     --prefix
       "${pkgdir}/usr"
   )
-  cd "${srcdir}"
+  cd "${srcdir}/bindings/node.js"
   _npmdir="${pkgdir}/usr/lib/node_modules/"
   mkdir \
     -p \
