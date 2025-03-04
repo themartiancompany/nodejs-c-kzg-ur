@@ -297,11 +297,16 @@ _bindings_nodejs_deps_setup() {
 }
 
 _bindings_nodejs_build() {
+  local \
+    _yarn_opts
+  
   cd \
     "${srcdir}/${_tarname}/bindings/node.js"
   _bindings_nodejs_deps_setup
   yarn \
     install
+  make \
+    bundle
   # npm \
   #   pack
   # mv \
@@ -334,6 +339,7 @@ package() {
     -g
     --prefix
       "${pkgdir}/usr"
+    # --no-install-links="false"
   )
   _npmdir="${pkgdir}/usr/lib/node_modules/"
   mkdir \
@@ -343,18 +349,16 @@ package() {
     "${_npmdir}"
   if [[ "${_source}" == "github" ]]; then
     _src="${srcdir}/${_tarname}/bindings/node.js"
-    npm \
-      config \
-        set \
-	  install-links="false" \
-	  --location \
-	    "${_src}"
+    cp \
+      -r \
+      "${_src}/dist" \
+      "c-kzg"
   elif [[ "${_source}" == "npm" ]]; then
     _src="${srcdir}/${_pkg}-${pkgver}.tgz"
+    npm \
+      install \
+        "${_npm_opts[@]}" \
+        "${_src}"
   fi
-  npm \
-    install \
-      "${_npm_opts[@]}" \
-      "${_src}"
 }
 
